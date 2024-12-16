@@ -63,10 +63,8 @@ const PostPage = () => {
                             </Alert>
                         )}
                         {!isLoaded ? (
-                            <div className="text-center py-5">
-                                <Spinner animation="border" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </Spinner>
+                            <div className="text-center py-5 d-flex justify-content-center align-items-center" style={{minHeight: '55vh'}}>
+                                <Spinner animation="grow" />;
                             </div>
                         ) : (
                             post && (
