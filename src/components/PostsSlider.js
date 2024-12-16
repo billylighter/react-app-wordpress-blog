@@ -90,9 +90,14 @@ const PostsSlider = ({title, withImages, params}) => {
                                     <p className="" dangerouslySetInnerHTML={{__html: post.excerpt.rendered}}></p>
                                 </i>
                                 <div className="text-center">
-                                    <Button as={Link} to={`/post/${post.id}`} variant="light" size="lg">
+                                    <Button as={Link}
+                                            to={{pathname: `/post/${post.id}`}}
+                                            state={{post: post}}
+                                            variant="light"
+                                            size="lg">
                                         Read More
                                     </Button>
+
                                 </div>
                             </Carousel.Caption>
 

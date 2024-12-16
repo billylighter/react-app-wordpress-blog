@@ -1,45 +1,50 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import {Spinner, Alert, Container, Navbar, Nav, Row, Col} from "react-bootstrap";
 
 const PostPage = () => {
     const { id } = useParams();
-    const [post, setPost] = useState(null);
+    // const [post, setPost] = useState(null);
+    const location = useLocation();
+    const post = location.state.post;
     const [featuredImage, setFeaturedImage] = useState(null);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    console.log(useLocation())
+
 
     const username = process.env.REACT_APP_USERNAME;
     const password = process.env.REACT_APP_PASSWORD;
     const wordpressApiUrl = process.env.REACT_APP_WORDPRESS_API_URL;
 
-    useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const response = await axios.get(`${wordpressApiUrl}/wp-json/wp/v2/posts/${id}`, {
-                    auth: { username, password },
-                });
-                const postData = response.data;
-
-                setPost(postData);
-
-                if (postData.featured_media) {
-                    const mediaResponse = await axios.get(
-                        `${wordpressApiUrl}/wp-json/wp/v2/media/${postData.featured_media}`,
-                        { auth: { username, password } }
-                    );
-                    setFeaturedImage(mediaResponse.data);
-                }
-                setIsLoaded(true);
-            } catch (err) {
-                setError(err.message);
-                setIsLoaded(true);
-            }
-        };
-
-        fetchPost();
-    }, [id, post, username, password, wordpressApiUrl]);
+    // useEffect(() => {
+    //     const fetchPost = async () => {
+    //         try {
+    //             const response = await axios.get(`${wordpressApiUrl}/wp-json/wp/v2/posts/${id}`, {
+    //                 auth: { username, password },
+    //             });
+    //             const postData = response.data;
+    //
+    //             setPost(postData);
+    //
+    //             if (postData.featured_media) {
+    //                 const mediaResponse = await axios.get(
+    //                     `${wordpressApiUrl}/wp-json/wp/v2/media/${postData.featured_media}`,
+    //                     { auth: { username, password } }
+    //                 );
+    //                 setFeaturedImage(mediaResponse.data);
+    //             }
+    //             setIsLoaded(true);
+    //         } catch (err) {
+    //             setError(err.message);
+    //             setIsLoaded(true);
+    //         }
+    //     };
+    //
+    //     fetchPost();
+    // }, [id, post, username, password, wordpressApiUrl]);
 
     return (
         <>
@@ -62,24 +67,24 @@ const PostPage = () => {
                                 <strong>Error:</strong> {error}
                             </Alert>
                         )}
-                        {!isLoaded ? (
+                        {!post ? (
                             <div className="text-center py-5 d-flex justify-content-center align-items-center" style={{minHeight: '55vh'}}>
                                 <Spinner animation="grow" />;
                             </div>
                         ) : (
                             post && (
                                 <article>
-                                    {featuredImage && (
+                                    {post.featured_image && (
                                         <img
                                             src={
-                                                featuredImage.media_details.sizes.medium.source_url ||
-                                                featuredImage.source_url
+                                                post.featured_image.media_details.sizes.medium.source_url ||
+                                                post.featured_image.source_url
                                             }
-                                            srcSet={Object.values(featuredImage.media_details.sizes)
+                                            srcSet={Object.values(post.featured_image.media_details.sizes)
                                                 .map((size) => `${size.source_url} ${size.width}w`)
                                                 .join(", ")}
                                             sizes="(max-width: 768px) 100vw, 75vw"
-                                            alt={featuredImage.alt_text || `${post.title.rendered}`}
+                                            alt={post.featured_image.alt_text || `${post.title.rendered}`}
                                             className="img-fluid mb-4"
                                         />
                                     )}

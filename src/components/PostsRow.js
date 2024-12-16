@@ -89,7 +89,11 @@ const PostsRow = ({ title, withImages, params }) => {
                                     <Card.Text
                                         dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
                                     ></Card.Text>
-                                    <Button as={Link} to={`/post/${post.id}`} variant="dark">
+                                    <Button as={Link}
+                                            to={{pathname: `/post/${post.id}`}}
+                                            state={{post: post}}
+                                            variant="dark"
+                                            size="md">
                                         Read More
                                     </Button>
                                 </Card.Body>
